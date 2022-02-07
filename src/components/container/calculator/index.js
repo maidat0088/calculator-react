@@ -12,7 +12,6 @@ const CalculatorPanelContainer = styled("div")`
   border: 2px solid #000000;
   justify-content: space-between;
   background-color: #ffffff;
-
 `;
 
 const CalculatorKeys = styled("div")`
@@ -38,6 +37,18 @@ const clearCalculator = () => {
     operation: undefined,
     isEqualBtnClick: false,
   };
+};
+
+const ButtonKey = ({ button: { style, content, value, onClick } }) => {
+  return (
+    <button
+      value={value}
+      css={style ? style : ""}
+      onClick={(e) => onClick(e.target.value)}
+    >
+      <span>{content ? content : value}</span>
+    </button>
+  );
 };
 
 const CalculatorPanel = () => {
@@ -105,187 +116,189 @@ const CalculatorPanel = () => {
   const handleNumberClick = (inputNumber) => {
     console.log(inputNumber);
 
-    if (inputNumber === "+-") {
-      let currentParseFloatNumber = parseFloat(calculator.currentNumber) * -1;
-      let resultParseFloatNumber = parseFloat(calculator.result) * -1;
+    // if (inputNumber === "+-") {
+    //   let currentParseFloatNumber = parseFloat(calculator.currentNumber) * -1;
+    //   let resultParseFloatNumber = parseFloat(calculator.result) * -1;
 
-      if (isNaN(currentParseFloatNumber) && isNaN(resultParseFloatNumber))
-        return;
+    //   if (isNaN(currentParseFloatNumber) && isNaN(resultParseFloatNumber))
+    //     return;
 
-      setCalculator({
-        ...calculator,
-        currentNumber: isNaN(currentParseFloatNumber)
-          ? calculator.currentNumber
-          : currentParseFloatNumber.toString(),
-        result: isNaN(resultParseFloatNumber)
-          ? calculator.result
-          : resultParseFloatNumber.toString(),
-      });
+    //   setCalculator({
+    //     ...calculator,
+    //     currentNumber: isNaN(currentParseFloatNumber)
+    //       ? calculator.currentNumber
+    //       : currentParseFloatNumber.toString(),
+    //     result: isNaN(resultParseFloatNumber)
+    //       ? calculator.result
+    //       : resultParseFloatNumber.toString(),
+    //   });
 
-      return;
-    }
+    //   return;
+    // }
 
-    if (inputNumber === "." && calculator.currentNumber.includes(".")) return;
-    if (inputNumber === "%" && calculator.currentNumber === "") return;
-    if (inputNumber === "%" && calculator.currentNumber.includes("%")) return;
+    // if (inputNumber === "." && calculator.currentNumber.includes(".")) return;
+    // if (inputNumber === "%" && calculator.currentNumber === "") return;
+    // if (inputNumber === "%" && calculator.currentNumber.includes("%")) return;
 
-    if (calculator.isEqualBtnClick) {
-      setCalculator({
-        currentNumber: inputNumber,
-        previousNumber: "",
-        result: "",
-        operation: undefined,
-        isEqualBtnClick: false,
-      });
-      return;
-    }
+    // if (calculator.isEqualBtnClick) {
+    //   setCalculator({
+    //     currentNumber: inputNumber,
+    //     previousNumber: "",
+    //     result: "",
+    //     operation: undefined,
+    //     isEqualBtnClick: false,
+    //   });
+    //   return;
+    // }
 
-    if (calculator.result !== "") {
-      setCalculator({
-        ...calculator,
-        previousNumber: calculator.result,
-        currentNumber: `${inputNumber}`,
-        result: "",
-      });
+    // if (calculator.result !== "") {
+    //   setCalculator({
+    //     ...calculator,
+    //     previousNumber: calculator.result,
+    //     currentNumber: `${inputNumber}`,
+    //     result: "",
+    //   });
 
-      return;
-    }
+    //   return;
+    // }
 
-    setCalculator({
-      ...calculator,
-      currentNumber: `${calculator.currentNumber}${inputNumber}`,
-    });
+    // setCalculator({
+    //   ...calculator,
+    //   currentNumber: `${calculator.currentNumber}${inputNumber}`,
+    // });
   };
 
   const handleOperationClick = (inputOperation) => {
     console.log(inputOperation);
 
-    // Ussing previous result to continute operate
-    if (calculator.result !== "") {
-      console.log("Ussing previous result to continute operate");
-      setCalculator({
-        ...calculator,
-        previousNumber: calculator.result,
-        operation: inputOperation,
-        isEqualBtnClick: false,
-      });
-      return;
-    }
+  //   // Ussing previous result to continute operate
+  //   if (calculator.result !== "") {
+  //     console.log("Ussing previous result to continute operate");
+  //     setCalculator({
+  //       ...calculator,
+  //       previousNumber: calculator.result,
+  //       operation: inputOperation,
+  //       isEqualBtnClick: false,
+  //     });
+  //     return;
+  //   }
 
-    if (calculator.previousNumber !== "") {
-      // Compute  operation
-      const result = computeResult();
-      if (result === undefined) return;
+  //   if (calculator.previousNumber !== "") {
+  //     // Compute  operation
+  //     const result = computeResult();
+  //     if (result === undefined) return;
 
-      setCalculator({
-        ...calculator,
-        operation: inputOperation,
-        result: result,
-      });
+  //     setCalculator({
+  //       ...calculator,
+  //       operation: inputOperation,
+  //       result: result,
+  //     });
 
-      return;
-    }
-    // Inpui new operation
-    setCalculator({
-      ...calculator,
-      previousNumber: calculator.currentNumber,
-      currentNumber: "",
-      operation: inputOperation,
-    });
-  };
+  //     return;
+  //   }
+  //   // Inpui new operation
+  //   setCalculator({
+  //     ...calculator,
+  //     previousNumber: calculator.currentNumber,
+  //     currentNumber: "",
+  //     operation: inputOperation,
+  //   });
+  // };
 
-  const computeResult = () => {
-    let newCalculator = { ...calculator };
-    let result;
+  // const computeResult = () => {
+  //   let newCalculator = { ...calculator };
+  //   let result;
 
-    const resultRegex = /(0+$|\.$)/gi;
+  //   const resultRegex = /(0+$|\.$)/gi;
 
-    // 80% + 120 = 80*0.01 + 120 = 120.8
-    if (newCalculator.previousNumber.toString().includes("%")) {
-      newCalculator = {
-        ...newCalculator,
-        previousNumber: parseFloat(newCalculator.previousNumber) * 0.01,
-      };
-    }
+  //   // 80% + 120 = 80*0.01 + 120 = 120.8
+  //   if (newCalculator.previousNumber.toString().includes("%")) {
+  //     newCalculator = {
+  //       ...newCalculator,
+  //       previousNumber: parseFloat(newCalculator.previousNumber) * 0.01,
+  //     };
+  //   }
 
-    if (newCalculator.currentNumber.toString().includes("%")) {
-      if (newCalculator.previousNumber === "") {
-        // 80% = 80*0.01 = 120.8
-        newCalculator = {
-          ...newCalculator,
-          previousNumber: 1,
-          operation: "*",
-          currentNumber: parseFloat(newCalculator.currentNumber) * 0.01,
-        };
-      } else if (newCalculator.previousNumber !== "") {
-        // 120 + 80% = 120 + 80*0.01*120 = 120.8 =216
-        newCalculator = {
-          ...newCalculator,
-          currentNumber:
-            parseFloat(newCalculator.currentNumber) *
-            0.01 *
-            newCalculator.previousNumber,
-        };
-      }
-    }
+  //   if (newCalculator.currentNumber.toString().includes("%")) {
+  //     if (newCalculator.previousNumber === "") {
+  //       // 80% = 80*0.01 = 120.8
+  //       newCalculator = {
+  //         ...newCalculator,
+  //         previousNumber: 1,
+  //         operation: "*",
+  //         currentNumber: parseFloat(newCalculator.currentNumber) * 0.01,
+  //       };
+  //     } else if (newCalculator.previousNumber !== "") {
+  //       // 120 + 80% = 120 + 80*0.01*120 = 120.8 =216
+  //       newCalculator = {
+  //         ...newCalculator,
+  //         currentNumber:
+  //           parseFloat(newCalculator.currentNumber) *
+  //           0.01 *
+  //           newCalculator.previousNumber,
+  //       };
+  //     }
+  //   }
 
-    const previousParseFloatNumber = parseFloat(newCalculator.previousNumber);
-    const currentParseFloatNumber = parseFloat(newCalculator.currentNumber);
+  //   const previousParseFloatNumber = parseFloat(newCalculator.previousNumber);
+  //   const currentParseFloatNumber = parseFloat(newCalculator.currentNumber);
 
-    if (isNaN(previousParseFloatNumber) || isNaN(currentParseFloatNumber))
-      return;
+  //   if (isNaN(previousParseFloatNumber) || isNaN(currentParseFloatNumber))
+  //     return;
 
-    switch (newCalculator.operation) {
-      case "+":
-        result = previousParseFloatNumber + currentParseFloatNumber;
-        break;
-      case "-":
-        result = previousParseFloatNumber - currentParseFloatNumber;
-        break;
-      case "*":
-        result = previousParseFloatNumber * currentParseFloatNumber;
-        break;
-      case "/":
-        result = previousParseFloatNumber / currentParseFloatNumber;
-        break;
-      default:
-        return;
-    }
+  //   switch (newCalculator.operation) {
+  //     case "+":
+  //       result = previousParseFloatNumber + currentParseFloatNumber;
+  //       break;
+  //     case "-":
+  //       result = previousParseFloatNumber - currentParseFloatNumber;
+  //       break;
+  //     case "*":
+  //       result = previousParseFloatNumber * currentParseFloatNumber;
+  //       break;
+  //     case "/":
+  //       result = previousParseFloatNumber / currentParseFloatNumber;
+  //       break;
+  //     default:
+  //       return;
+  //   }
 
-    console.log(result);
+  //   console.log(result);
 
-    result = result.toFixed(12).toString();
-    // remove end '0'
-    // result = 9.012300000000 => result = 9.0123
-    // result = 9.000000000000 => result = 9.
-    result = result.replaceAll(resultRegex, "");
+  //   result = result.toFixed(12).toString();
+  //   // remove end '0'
+  //   // result = 9.012300000000 => result = 9.0123
+  //   // result = 9.000000000000 => result = 9.
+  //   result = result.replaceAll(resultRegex, "");
 
-    // remove end '.'
-    // result = 9.0123 => result = 9.0123
-    // result = 9. => result = 9
-    result = result.replaceAll(resultRegex, "");
+  //   // remove end '.'
+  //   // result = 9.0123 => result = 9.0123
+  //   // result = 9. => result = 9
+  //   result = result.replaceAll(resultRegex, "");
 
-    return result;
+  //   return result;
   };
 
   const handleClearDisplay = () => {
-    setCalculator(clearCalculator());
+    console.log("handleClearDisplay");
+   // setCalculator(clearCalculator());
   };
 
   const handleEqualClick = () => {
-    const result = computeResult();
+    console.log("handleEqualClick");
+    // const result = computeResult();
 
-    setCalculator({
-      ...calculator,
-      result: result === undefined ? "" : result,
-      isEqualBtnClick: true,
-    });
+    // setCalculator({
+    //   ...calculator,
+    //   result: result === undefined ? "" : result,
+    //   isEqualBtnClick: true,
+    // });
   };
 
   console.log(calculator);
   console.log(isNoOperation());
-  console.log( calculator.result ==="");
-  console.log( isNoOperation() && calculator.result );
+  console.log(calculator.result === "");
+  console.log(isNoOperation() && calculator.result);
   return (
     <CalculatorPanelContainer>
       <div
@@ -305,92 +318,46 @@ const CalculatorPanel = () => {
           font-size: 15px;
         `}
       >
-        <span>{`${
-          calculator.previousNumber  
-        }  
+        <span>{`${calculator.previousNumber}  
 
-        ${
-          calculator.operation
-        }
+        ${calculator.operation}
         
         `}</span>
 
-<span>{`${
-          calculator.currentNumber
-        } `}</span>
-
- 
-
+        <span>{`${calculator.currentNumber} `}</span>
       </div>
 
-      <CalculatorKeys >
-        <button onClick={handleClearDisplay}>C</button>
-        <button value="+-" onClick={(e) => handleNumberClick(e.target.value)}>
-          <span>+ -</span>
-        </button>
-        <button value="%" onClick={(e) => handleNumberClick(e.target.value)}>
-          %
-        </button>
-        <button value="/" onClick={(e) => handleOperationClick(e.target.value)}>
-          /
-        </button>
-
-        {[7, 8, 9].map((number) => (
-          <button
-            value={number}
-            onClick={(e) => handleNumberClick(e.target.value)}
-          >
-            {number}
-          </button>
+      <CalculatorKeys>
+        {[
+          { value: "C", onClick: handleClearDisplay },
+          { value: "+-", onClick: handleNumberClick },
+          { value: "%", onClick: handleNumberClick },
+          { value: "/", onClick: handleOperationClick },
+          { value: "7", onClick: handleNumberClick },
+          { value: "8", onClick: handleNumberClick },
+          { value: "9", onClick: handleNumberClick },
+          { value: "*", onClick: handleOperationClick, content: "x" },
+          { value: "4", onClick: handleNumberClick },
+          { value: "5", onClick: handleNumberClick },
+          { value: "6", onClick: handleNumberClick },
+          { value: "-", onClick: handleOperationClick },
+          { value: "1", onClick: handleNumberClick },
+          { value: "2", onClick: handleNumberClick },
+          { value: "3", onClick: handleNumberClick },
+          { value: "+", onClick: handleOperationClick },
+          {
+            value: "0",
+            onClick: handleNumberClick,
+            style: css`
+              grid-column-start: 1;
+              grid-column-end: 3;
+            `,
+          },
+          { value: ".", onClick: handleNumberClick },
+          { value: "=", onClick: handleEqualClick },
+        ].map((button) => (
+          <ButtonKey button={button} />
         ))}
-
-        <button value="*" onClick={(e) => handleOperationClick(e.target.value)}>
-          x
-        </button>
-
-        {[4, 5, 6].map((number) => (
-          <button
-            value={number}
-            onClick={(e) => handleNumberClick(e.target.value)}
-          >
-            {number}
-          </button>
-        ))}
-
-        <button value="-" onClick={(e) => handleOperationClick(e.target.value)}>
-          -
-        </button>
-
-        {[1, 2, 3].map((number) => (
-          <button
-            value={number}
-            onClick={(e) => handleNumberClick(e.target.value)}
-          >
-            {number}
-          </button>
-        ))}
-
-        <button value="+" onClick={(e) => handleOperationClick(e.target.value)}>
-          +
-        </button>
-
-        <button
-          css={css`
-            grid-column-start: 1;
-            grid-column-end: 3;
-          `}
-          value="0"
-          onClick={(e) => handleNumberClick(e.target.value)}
-        >
-          0
-        </button>
-
-        <button value="." onClick={(e) => handleNumberClick(e.target.value)}>
-          .
-        </button>
-        <button value="=" onClick={handleEqualClick}>
-          =
-        </button>
       </CalculatorKeys>
     </CalculatorPanelContainer>
   );
